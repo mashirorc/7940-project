@@ -1,8 +1,10 @@
 # import configparser
 import requests
 import os
+from dotenv import load_dotenv
 class HKBU_ChatGPT():
     def __init__(self):
+        load_dotenv('secrets.env')
         self.modelname = (os.environ['GPT_MODEL'])
         self.access_token = (os.environ['GPT_TOKEN'])
         self.url = (os.environ['GPT_URL'])
