@@ -137,6 +137,7 @@ def create_table():
         connection.commit()
         logging.info("Table created successfully")
     except mysql.connector.Error as error:
+        connect_to_db()
         logging.error("Failed to create table: {}".format(error))
 
 def fetch_users():
@@ -149,6 +150,7 @@ def fetch_users():
         for row in results:
             logging.info(row)
     except mysql.connector.Error as error:
+        connect_to_db()
         logging.error("Failed to fetch data: {}".format(error))
 
 def add_user(name, interest):
@@ -161,6 +163,7 @@ def add_user(name, interest):
         connection.commit()
         logging.info("User added successfully")
     except mysql.connector.Error as error:
+        connect_to_db()
         logging.error("Failed to insert data: {}".format(error))
 
 def find_user_by_name(name):
@@ -178,6 +181,7 @@ def find_user_by_name(name):
             logging.info("User with specified name not found")
             return None
     except mysql.connector.Error as error:
+        connect_to_db()
         logging.error("Failed to fetch data: {}".format(error))
 
 def find_user_by_interest(interest):
@@ -195,6 +199,7 @@ def find_user_by_interest(interest):
             logging.info("User with specified interest not found")
             return None
     except mysql.connector.Error as error:
+        connect_to_db()
         logging.error("Failed to fetch data: {}".format(error))
     
 def clear_table():
@@ -206,6 +211,7 @@ def clear_table():
         connection.commit()
         logging.info("Table cleared successfully")
     except mysql.connector.Error as error:
+        connect_to_db()
         logging.error("Failed to clear table: {}".format(error))
 
 def warmup():
