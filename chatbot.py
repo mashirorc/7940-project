@@ -219,7 +219,7 @@ def warmup():
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
+        if self.path == '/robots933456.txt':
             warmup()
 
         self.send_response(200)
