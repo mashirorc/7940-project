@@ -1,3 +1,4 @@
+import threading
 from telegram import Update
 from ChatGPT_HKBU import HKBU_ChatGPT
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackContext)
@@ -5,6 +6,9 @@ import mysql.connector
 from dotenv import load_dotenv
 import os
 import logging
+import socketserver
+from http.server import BaseHTTPRequestHandler
+
 global connection
 def main():
     # Load your token and create an Updater for your Bot
@@ -18,6 +22,10 @@ def main():
     # and why things do not work as expected Meanwhile, update your config.ini as:
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
+    
+    # setup response to warmup request
+    httpd = socketserver.TCPServer(("", 80), MyHandler)
+    threading.Thread(target=httpd.serve_forever).start()
     
     connect_to_db()
     # create_table()
@@ -199,6 +207,18 @@ def clear_table():
         logging.info("Table cleared successfully")
     except mysql.connector.Error as error:
         logging.error("Failed to clear table: {}".format(error))
+
+def warmup():
+    logging.info("Respond to warmup request")
+
+class MyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/':
+            warmup()
+
+        self.send_response(200)
+
+
 
 if __name__ == '__main__':
     main()
