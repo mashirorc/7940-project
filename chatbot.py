@@ -100,10 +100,10 @@ def connect_to_db():
     try:
         global connection
         connection = mysql.connector.connect(
-            host="mysql-7940chatbot.alwaysdata.net",
-            user="408098_root",
-            password="Cpy960401",
-            database="7940chatbot_rooms"
+            host=os.environ['SQL_HOST'],
+            user=os.environ['SQL_USERNAME'],
+            password=os.environ['SQL_PWD'],
+            database=os.environ['SQL_DBNAME']
         )
         # integrate mysql logging to python logging
         logger = logging.getLogger("mysql.connector")
