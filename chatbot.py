@@ -26,7 +26,7 @@ def main():
     # add_user("alan", "halo")
     clear_table()
     # fetch_users()
-    
+    #
     # register a dispatcher to handle message: here we register an echo dispatcher
     # echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     # dispatcher.add_handler(echo_handler)
