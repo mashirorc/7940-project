@@ -24,7 +24,7 @@ def main():
                         level=logging.INFO)
     
     # setup response to warmup request
-    httpd = socketserver.TCPServer(("", 80), MyHandler)
+    httpd = socketserver.TCPServer(("", 8000), MyHandler)
     threading.Thread(target=httpd.serve_forever).start()
     
     connect_to_db()
@@ -219,10 +219,10 @@ def warmup():
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/robots933456.txt':
+        if self.path == '/':
             warmup()
 
-        self.send_response(200)
+        self.send_response(404)
 
 
 
