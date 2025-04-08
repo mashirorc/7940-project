@@ -8,6 +8,7 @@ import os
 import logging
 import socketserver
 from http.server import BaseHTTPRequestHandler
+import time
 
 global connection
 def main():
@@ -23,10 +24,9 @@ def main():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
     
-    # setup response to warmup request
-    httpd = socketserver.TCPServer(("", 8000), MyHandler)
-    threading.Thread(target=httpd.serve_forever).start()
-    
+
+
+    threading.Thread(target=warmup).start()
     connect_to_db()
     # create_table()
     # add_user("tom", "rocket league")
@@ -53,6 +53,9 @@ def main():
     # To start the bot:
     updater.start_polling()
     updater.idle()
+
+
+
 def equipped_chatgpt(update, context):
     global chatgpt
     engineered_message = f"""
@@ -215,15 +218,33 @@ def clear_table():
         logging.error("Failed to clear table: {}".format(error))
 
 def warmup():
-    logging.info("Respond to warmup request")
+    # setup response to warmup request
+    httpd = socketserver.TCPServer(("", 8000), MyHandler)
+    global Running
+    Running = True
+    timemout = time.time() + 20
+    while keep_running() and time.time() < timemout:
+        httpd.handle_request()
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
-            warmup()
+            logging.info("Respond to warmup request")
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(b'Hello, world!')
+        else:
+            self.send_response(404)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(b'Page not found')
+        global Running
+        Running = False
 
-        self.send_response(404)
-
+def keep_running():
+    global Running
+    return Running
 
 
 if __name__ == '__main__':
